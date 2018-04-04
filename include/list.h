@@ -9,6 +9,9 @@ extern "C" {
 
 #include <stddef.h>
 
+/* "typeof" is a GNU extension.
+ * Reference: https://gcc.gnu.org/onlinedocs/gcc/Typeof.html
+ */
 #if defined(__GNUC__)
 #define __LIST_HAVE_TYPEOF 1
 #endif
