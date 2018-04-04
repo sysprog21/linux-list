@@ -7,8 +7,10 @@ $(GIT_HOOK): scripts/install-git-hooks
 all: $(GIT_HOOK) check
 .DEFAULT_GOAL := all
 
+include common.mk
+
 CFLAGS = -I./include
-CFLAGS += -std=c99 -pedantic -Wall -W -Werror -MD -MP
+CFLAGS += -std=c99 -pedantic -Wall -W -Werror
 
 TESTS = \
     containerof \
@@ -36,42 +38,30 @@ TESTS = \
     list_cut_position
 
 TESTS := $(addprefix tests/,$(TESTS))
-
-# tests flags and options
-CFLAGS += -std=c99 -pedantic -Wall -W -Werror -MD -MP
-
-# verbose output switch
-ifneq ($(findstring $(MAKEFLAGS),s),s)
-ifndef V
-	Q_CC = @echo '    CC' $@;
-	Q_LD = @echo '    CC' $@;
-	export Q_CC
-	export Q_LD
-endif
-endif
-
-COMPILE.c = $(Q_CC)$(CC) -x c $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
-LINK.o = $(Q_LD)$(CC) $(CFLAGS) $(LDFLAGS) $(TARGET_ARCH)
+# dependency of source files
+deps := $(TESTS:%:%.o.d)
 
 TESTS_OK = $(TESTS:=.ok)
 
 check: $(TESTS_OK)
 
 $(TESTS_OK): %.ok: %
-	@echo ">>  CC$(TESTRUN_NAME) $<"
-	@$(TESTRUN_WRAPPER) ./$<
+	$(Q)$(PRINTF) "*** Validating $< ***\n"
+	$(Q)./$< && $(PRINTF) "\t$(PASS_COLOR)[ Verified ]$(NO_COLOR)\n"
 	@touch $@
 
 # standard build rules
 .SUFFIXES: .o .c
 .c.o:
-	$(COMPILE.c) -o $@ $<
+	$(VECHO) "  CC\t$@\n"
+	$(Q)$(CC) -o $@ $(CFLAGS) -c -MMD -MF $@.d $<
 
 $(TESTS): %: %.o
-	$(LINK.o) $^ $(LDLIBS) -o $@
+	$(VECHO) "  LD\t$@\n"
+	$(Q)$(CC) -o $@ $^ $(LDFLAGS)
 
 clean:
-	@$(RM) $(TESTS) $(deps) $(TESTS_OK) $(TESTS:=.o) $(TESTS:=.d)
+	$(VECHO) "  Cleaning...\n"
+	$(Q)$(RM) $(TESTS) $(deps) $(TESTS_OK) $(TESTS:=.o)
 
-deps = $(TESTS:=.d)
 -include $(deps)
