@@ -62,6 +62,6 @@ $(TESTS): %: %.o
 
 clean:
 	$(VECHO) "  Cleaning...\n"
-	$(Q)$(RM) $(TESTS) $(deps) $(TESTS_OK) $(TESTS:=.o)
+	$(Q)$(RM) $(TESTS) $(TESTS_OK) $(TESTS:=.o) $(TESTS:=.o.d)
 
 -include $(deps)
