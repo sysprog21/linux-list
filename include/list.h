@@ -279,7 +279,7 @@ static inline void list_splice_tail_init(struct list_head *list,
  * @node: pointer to the node in which defines the cutting point
  *
  * All entries from the beginning of the list @head_from to (including) the
- * @node is moved to @head_from.
+ * @node is moved to @head_to.
  *
  * @head_to is replaced when @head_from is not empty. @node must be a real
  * list node from @head_from or the behavior is undefined.
