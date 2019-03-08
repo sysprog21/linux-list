@@ -39,7 +39,7 @@ TESTS = \
 
 TESTS := $(addprefix tests/,$(TESTS))
 # dependency of source files
-deps := $(TESTS:%:%.o.d)
+deps := $(TESTS:%=%.o.d)
 
 TESTS_OK = $(TESTS:=.ok)
 
@@ -62,6 +62,6 @@ $(TESTS): %: %.o
 
 clean:
 	$(VECHO) "  Cleaning...\n"
-	$(Q)$(RM) $(TESTS) $(TESTS_OK) $(TESTS:=.o) $(TESTS:=.o.d)
+	$(Q)$(RM) $(TESTS) $(TESTS_OK) $(TESTS:=.o) $(deps)
 
 -include $(deps)
