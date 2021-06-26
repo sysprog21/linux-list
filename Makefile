@@ -10,7 +10,7 @@ all: $(GIT_HOOK) check
 include common.mk
 
 CFLAGS = -I./include
-CFLAGS += -std=c99 -pedantic -Wall -W -Werror
+CFLAGS += -std=c99 -pedantic -Wall -Wextra -Werror
 
 TESTS = \
     containerof \
