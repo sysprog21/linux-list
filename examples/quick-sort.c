@@ -25,7 +25,7 @@ static void list_qsort(struct list_head *head)
         if (cmpint(&item->i, &pivot->i) < 0)
             list_move_tail(&item->list, &list_less);
         else
-            list_move(&item->list, &list_greater);
+            list_move_tail(&item->list, &list_greater);
     }
 
     list_qsort(&list_less);
